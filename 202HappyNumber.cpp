@@ -64,7 +64,7 @@ bool isHappy(int n) {
     if (slow == 1) return 1;
     else return 0;
 }
-}
+};
 
 
 
