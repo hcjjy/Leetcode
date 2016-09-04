@@ -173,3 +173,75 @@ public:
 		return true;
     }
 };
+
+/*用拓扑算法判断有向图是否有环，用一个数组 incomingNum[n]记录每个节点的入点，
+找到一个入点为0点节点，将该点相关连的点的入点更新，直到每个点的入点为0或者有入点不为0的点存在*/
+class Solution {
+public:
+	int n;
+	struct Node
+	{
+		int index;
+		Node* next;
+	};
+    bool canFinish(int numCourses, vector<pair<int, int>>& prerequisites) {
+		n = numCourses;
+		Node* nodeList[numCourses];
+		Node* lastNodeList[numCourses];
+		int incomingNum[numCourses];
+		bool visited[numCourses];
+		for(int i = 0; i < n; ++i)
+		{
+			nodeList[i] = NULL;
+			incomingNum[i] = 0;
+			visited[i] = false;
+		}
+		for(int i = 0; i < prerequisites.size(); ++i)
+		{
+			int next = prerequisites[i].first;
+			int pre = prerequisites[i].second;
+			
+			if(nodeList[pre] == NULL)
+			{
+				lastNodeList[pre] = new Node();
+				lastNodeList[pre]->index = next;
+				lastNodeList[pre]->next = NULL;
+				nodeList[pre] = lastNodeList[pre];
+			}
+			else
+			{
+				lastNodeList[pre]->next = new Node();
+				lastNodeList[pre]->next->index = next;
+				lastNodeList[pre] = lastNodeList[pre]->next;
+				lastNodeList[pre]->next = NULL;
+			}
+			++incomingNum[next];
+		}
+		bool flag = false;
+		int cnt = 0;
+		while(cnt < n)
+		{
+		    int i = 0;
+    		for( ; i < n; ++i)
+    		{
+    		    if(!visited[i] && !incomingNum[i])
+    		    {
+    		        visited[i] = true;
+    		        ++cnt;
+    		        for(Node* p = nodeList[i]; p != NULL; p = p->next)
+    		        {
+    		            --incomingNum[p->index];
+    	        	}
+    	        	break;//一次只找一个
+    		    }
+    		}
+    		//找不到没有访问过且入点为0的点
+    		if(i == n)
+    		{
+    		    return false;
+    		}
+
+		}
+		return true;
+    }
+};
