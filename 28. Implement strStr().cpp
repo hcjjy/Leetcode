@@ -1,3 +1,6 @@
+/*
+实现KMP匹配算法
+*/
 class Solution {
 public:
 	void genereateTable(string& needle,vector<int>& PMT){//partial match table
